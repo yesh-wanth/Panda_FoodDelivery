@@ -1,0 +1,61 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+    <div class="container">
+      <a class="navbar-brand" href="{% url 'home' %}">Instant Food Everytime</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarResponsive">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item active">
+            <a class="nav-link" href="{% url 'home' %}">Home
+              <span class="sr-only">(current)</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'cart' %}">Cart</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Account</a>
+          </li>
+          {% if user.is_authenticated %}
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'logout' %}">Logout</a>
+            </li>
+          {% else %}
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'login' %}">Login</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'register' %}">Register</a>
+            </li>
+          {% endif %}
+        </ul>
+      </div>
+    </div>
+</nav>
+{% load cart_tag %}
+Cart
+    <link href="https://startbootstrap.github.io/startbootstrap-shop-homepage/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Custom styles for this template -->
+    <link href="https://startbootstrap.github.io/startbootstrap-shop-homepage/css/shop-homepage.css" rel="stylesheet">
+
+Total Length :: {{request.session.cart|length}}
+
+    Cart Detail:
+
+    {% for key,value in request.session.cart.items %}
+        <h4>{{value.name}}</h4>
+        <p>Price : {{value.price}}</p>
+        <p>Quantity : {{value.quantity}}</p>
+
+        <p><a href="{% url 'item_clear' value.product_id %}">Clear Item</a></p>
+        <p><a href="{% url 'item_increment' value.product_id %}">Increase Quantity</a></p>
+        {% if value.quantity >  1 %}
+            <p><a href="{% url 'item_decrement' value.product_id %}">Decrease Quantity</a></p>
+        {% endif %}
+        Total : <strong>{{ value.price|multiply:value.quantity }}</strong>
+
+    {% endfor %}
+    <h4>Proceed to <a href="#">checkout</a> </h4>
+    <h4><a href="{% url 'home' %}">Continue Shopping? </a></h4>
